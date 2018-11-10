@@ -100,7 +100,7 @@
     .attr('height', svgSize.y);
 
   d3.csv('./data/metro_pos_normalized.csv', posData => {
-    console.log(posData);
+    // console.log(posData);
     let posDict = {};
     posData.forEach(elem => {
       let name = elem[0];
@@ -179,7 +179,7 @@
           'name': d['origin']
         };
       }, stationData => {
-        console.log(stationData);
+        // console.log(stationData);
 
         let timeline = svg.append('g')
           .attr('transform', `translate(${timelinePos.x}, ${timelinePos.y})`);

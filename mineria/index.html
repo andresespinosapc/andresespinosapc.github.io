@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+  <title>Análisis de sentimiento criptomonedas</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="css/w3.css">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <style>
+  body {font-family: "Lato", sans-serif}
+  .mySlides {display: none}
+  </style>
+
+  <body>
+    <!-- Page content -->
+    <div class="w3-content" style="max-width:2000px;margin-top:46px">
+      <div class="w3-content w3-left w3-margin-left">
+        <a href="/" class="w3-btn w3-white w3-border w3-border-blue w3-round-large">Back</a>
+        <!-- <button href="/" class="w3-btn w3-white w3-border w3-border-red w3-round-large">Back</button> -->
+      </div>
+
+      <!-- The Band Section -->
+      <div class="w3-container w3-content w3-center w3-padding-64" style="max-width:800px" id="band">
+        <h2 class="w3-wide">Un intento de trading bot</h2>
+        <p class="w3-opacity"><i>IIC2433 - Minería de Datos</i></p>
+        <p class="w3-opacity"><i>Prof. Belén Saldías</i></p>
+        <p class="w3-justify">
+          En este proyecto analizamos el impacto de las noticias en el precio del ETH. La finalidad
+          última de este trabajo es generar datos útiles para los traders de criptomonedas.
+        </p>
+
+        <h3 class="w3-wide w3-left-align">Datos</h3>
+
+        <p class="w3-justify">
+          Usamos dos sets de datos. El primero consiste en publicaciones y comentarios del foro en línea Reddit.com, específicamente
+          del ​Subreddit de ​Ethereum​. En esta página, usuarios están constantemente hablando sobre
+          la cadena, pidiendo opiniones, compartiendo noticias, e incluso rumores, que a pesar de ser
+          poco fundamentados en ocasiones, aparentan tener una alto impacto en la variación de
+          precio.​ ​Los​ ​datos​ ​se​ ​extrajeron​ ​de​ ​una​ ​base​ ​de​ ​datos​ ​
+          <a target="_blank" href="https://bigquery.cloud.google.com/dataset/fh-bigquery:reddit_comments">almacenada​ ​en​</a>
+          <a target="_blank" href="https://bigquery.cloud.google.com/dataset/fh-bigquery:reddit_posts">BigQuery</a>.
+        </p>
+        <p class="w3-justify">
+          En total, el sub-foro cuenta con 50.151 publicaciones y 443.709 comentarios sobre esas
+          publicaciones. Las publicaciones tienen título y cuerpo, los comentarios solo cuerpo.
+          Entre las características que consideramos relevantes están el
+          autor,​ ​la​ ​fecha​ ​de​ ​creación​ ​y​ ​un​ ​puntaje​ ​calculado​ ​por​ ​Reddit.com.
+        </p>
+        <p class="w3-justify">
+          El <a target="_blank" href="get_ethereum_prices.html">segundo set de datos</a> corresponde al precio de la moneda ​Ether y fue obtenido utilizando
+          la API de Cryptocompare.com. Este contiene los datos desde el 1 de diciembre de 2015
+          sobre el precio de apertura, el precio al cerrar, el máximo, el mínimo y el volumen tranzado.
+          Fueron obtenidos los datos tanto por día como por hora, con el fin de probar con distintas
+          granularidades​ ​el​ ​momento​ ​de​ ​modelar​ ​el​ ​problema.
+        </p>
+        <p class="w3-justify">
+          Luego del preprocesamiento obtuvimos un total de 670 datos, correspondientes a los 670
+          días entre el 1 de diciembre de 2015 y el 30 de septiembre de 2017, con 74 ​features ​cada
+          uno. Solo se consideran los datos diarios ya que fueron los usamos finalmente.
+          Estos datos pueden ser pocos para realizar un buen clasificador, pero como se verá
+          más adelante, igual se obtuvieron resultados positivos. Más adelante se hablará de cómo se
+          pretende​ ​aumentar​ ​este​ ​dataset​.
+        </p>
+
+        <h3 class="w3-wide w3-left-align">Procesamiento de texto</h3>
+
+        <p class="w3-justify">
+
+        </p>
+
+        <h3 class="w3-wide w3-left-align">Análisis de sentimiento</h3>
+
+        <p class="w3-justify">
+          Encontramos un patrón interesante al seguir el siguiente procedimiento: Promediamos la polaridad
+          de los comentarios de cada día, normalizamos estos vectores para que queden entre -1 y 1, y transformamos
+          cada valor positivo en un 1 y cada valor negativo en un 0. En el siguiente gráfico se puede ver 
+          que hay una relación entre el precio y el sentimiento calculado. En los períodos de gran crecimiento
+          disminuye la ocurrencia de publicaciones positivas, hasta que l precio vuelve a caer.
+        </p>
+        <img src="images/binary_sentiment.png" class="w3-image" />
+
+        <h3 class="w3-wide w3-left-align">Reducción de dimensionalidad</h3>
+
+        <p class="w3-justify">
+          Dependiendo de la cantidad de días
+          considerados como entrada para el modelo la dimensión del vector de entrada para cada
+          predicción puede llegar a ser mayor a 8000. Para solucionar este problema se utilizaron dos técnicas. En primer lugar, se realizó una
+          selección de ​features utilizando Random Forest. Tomamos una medida de importancia de ​scikit-learn ​llamada ​feature_importances_6,
+          y descartamos los que tenían una importancia bajo​ ​1e-5. En segundo lugar, se utilizó la técnica Principal Component Analysis (PCA)
+          para generar los features finales.
+        </p>
+
+        <h3 class="w3-wide w3-left-align">Modelos</h3>
+
+        <p class="w3-justify">
+          Probamos nuestro clasificador con tres modelos distintos: K-Nearest​ ​Neighbors​ ​(KNN),
+          Support Vector Machine (SVM) y Random Forest (RF).
+        </p>
+      </div>
+
+      <!-- <div class="w3-container w3-center w3-padding-64">
+        <p style="color: grey;">Idea taken from http://mbtaviz.github.io/.</p>
+        <p style="color: grey;">Built from scratch.</p>
+      </div> -->
+
+    <!-- End Page Content -->
+    </div>
+
+  </body>
+</html>

@@ -286,6 +286,25 @@
 		})
 	};
 
+	var subMenus = function () {
+
+		$('[data-nav-subsection]').click(function (event) {
+			var section = $(this).parents('section[data-section]');
+			var siblings = section.find('[data-nav-subsection]');
+			var subsection = $(this).data('nav-subsection');
+
+			if ($('[data-subsection="' + subsection + '"]').length) {
+				siblings.removeClass('active');
+				$(this).addClass('active');
+				section.find('[data-subsection]').addClass('collapse');	
+				$('[data-subsection="' + subsection + '"]').removeClass('collapse');
+			}
+
+			event.preventDefault();
+			return false;
+		});
+	};
+
 	// Document on load.
 	$(function(){
 		fullHeight();
@@ -298,6 +317,7 @@
 		// navActive();
 		navigationSection();
 		// windowScroll();
+		subMenus();
 
 
 		mobileMenuOutsideClick();
